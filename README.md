@@ -1,89 +1,178 @@
 # POWERLEARN--PROJECT-AI-for-software-engineering-WEEK-8-AI-PROJECT
 
+# English Assistant Chatbot
 
-✅ README.md Content
+A simple web-based English Assistant chatbot built using Flask and NLTK. The chatbot helps users find synonyms and responses to basic English language questions.
+
+## Project Structure
+
+english-assistant/
+│
+├── app.py # Main Flask application
+├── templates/
+│ └── index.html # Web interface (includes inbuilt CSS)
+├── requirements.txt # Python dependencies
+├── README.md # Project documentation (this file)
+
 markdown
 Copy
 Edit
-# English Assistant Chatbot 🤖📘
 
-This is a simple AI-powered **English assistant chatbot** built using Python. It provides grammar tips, vocabulary support, and English usage feedback.
+## Features
 
----
+- User-friendly web interface with a clean, modern design.
+- Synonym suggestion using NLTK WordNet.
+- Graceful fallback responses for unsupported queries.
+- Uses Flask to handle web interactions.
 
-## 📁 Project Structure
+## Requirements
 
-App/
-├── chatbot_logic.py # Main chatbot logic
-├── test_chatbot.py # Terminal interface for testing
-├── app.py # Flask web application entry point
-├── templates/
-│ └── index.html # HTML UI for the web interface
+Install Python dependencies listed in `requirements.txt`:
 
-yaml
+Flask==2.3.2
+nltk==3.8.1
+
+perl
 Copy
 Edit
 
----
+### Install the required Python libraries:
 
-## 🚀 Features
+```bash
+pip install -r requirements.txt
+Also download NLTK corpora used for synonym generation:
 
-- ✅ Grammar error detection (basic)
-- ✅ Responds to questions about grammar and vocabulary
-- ✅ Simple Flask-based web UI
-- ✅ Console-based interaction (`test_chatbot.py`)
-
----
-
-## 💻 How to Run Locally
-
-1. **Clone the repo**:
-
-``bash
-git clone https://github.com/Markayo21/POWERLEARN--PROJECT-AI-for-software-engineering-WEEK-8-AI-PROJECT.git
-cd POWERLEARN--PROJECT-AI-for-software-engineering-WEEK-8-AI-PROJECT/App
-Create a virtual environment (optional but recommended):
-
-bash
+python
 Copy
 Edit
-python -m venv venv
-venv\Scripts\activate
-Install Flask:
-
-bash
-Copy
-Edit
-pip install flask
-Run the Web App:
+import nltk
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+How to Run
+In your terminal or command prompt:
 
 bash
 Copy
 Edit
 python app.py
-Then open your browser and go to:
-👉 http://127.0.0.1:5000
+Then visit: http://127.0.0.1:5000 in your browser.
 
-🧪 Run in the Terminal
-To test chatbot interaction in the terminal:
+Sample Questions
+You can try the following inputs:
 
-bash
+What’s a synonym for happy?
+
+Give a synonym for sad.
+
+Can you help me?
+
+I hate you.
+
+Example Response:
+vbnet
 Copy
 Edit
-python test_chatbot.py
-🔧 Technologies Used
-Python 3
+You: What's a synonym for happy?
+Assistant: A synonym for 'happy' is 'contented'
+For unsupported or unrelated input, the assistant responds:
 
-Flask (for web UI)
+rust
+Copy
+Edit
+I'm still learning. Can you ask something else?
+File: index.html
+This is the front-end of the chatbot with inbuilt CSS:
 
-Basic keyword-based logic (no ML model used)
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
 
-📚 Future Improvements
-Integrate a real NLP model (like spaCy or NLTK)
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
 
-Add smarter grammar correction
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
 
-Make vocabulary suggestions dynamic
+        form {
+            display: flex;
+            margin-top: 1rem;
+        }
 
-Deploy the chatbot online (e.g., using Render or Heroku)
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        input[type="submit"] {
+            padding: 0.8rem 1rem;
+            margin-left: 0.5rem;
+            font-size: 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .response {
+            margin-top: 1.5rem;
+            background: #ecf0f1;
+            padding: 1rem;
+            border-radius: 10px;
+            min-height: 60px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>English Assistant</h1>
+        <form method="post">
+            <input type="text" name="user_input" placeholder="Type your question..." required>
+            <input type="submit" value="Ask">
+        </form>
+        {% if user_input %}
+        <div class="response">
+            <p><span class="label">You:</span> {{ user_input }}</p>
+            <p><span class="label">Assistant:</span> {{ response }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+Author
+Mark Wainaina Iraya
+
+
 
