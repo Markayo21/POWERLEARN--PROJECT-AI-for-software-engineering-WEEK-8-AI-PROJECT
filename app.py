@@ -118,6 +118,10 @@ def get_synonyms(word):
 # Chatbot route
 @app.route("/chatbot", methods=["GET", "POST"]) #--- Mark i edited here to avoid dashboard route conflict
 def chatbot():
+    if "user_id" not in session:
+        flash("⚠️ Please login first.", "warning")
+        return redirect(url_for("login"))
+    
     user_input = ""
     response = ""
     if request.method == "POST":
