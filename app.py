@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session, flash
 from nltk.corpus import wordnet
-from werkzeug.security import  check_password_hash
+from werkzeug.security import  check_password_hash, generate_password_hash
 from model import db, User, ChatSession
 import nltk
 
@@ -27,6 +27,33 @@ def index():
     return redirect(url_for("login"))
 
 
+# Register route
+@app.route("/register", methods=["GET", "POST"])    
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        # Check if user already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash("⛔Email already registered.", "danger")
+            return redirect(url_for("register"))
+
+       # Hash the password
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+
+         # Create new user
+        new_user = User(username=username, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        flash("✅Registration successful! Please log in.", "success")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")  
+
 # Login route
 @app.route("/login", methods=["GET", "POST"])   
 #Define the login route
@@ -49,6 +76,10 @@ def login():
             flash("⛔Invalid username or password.", "danger")
             return redirect(url_for("login"))
         
+    # If GET request, render the login page
+    return render_template("login.html")
+
+
 # logout route
 @app.route('/logout')
 def logout():

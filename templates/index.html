@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>English Assistant</title>
-    <link rel="icon" href="https://img.icons8.com/?size=128&id=117195&format=png" type="image/png" />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f2f6fc;
+            background: #f3fcf2;
             margin: 0;
             padding: 0;
             display: flex;
@@ -79,7 +81,7 @@
         {% if user_input %}
         <div class="response">
             <p><span class="label">You:</span> {{ user_input }}</p>
-            <p><span class="label">Assistant:</span> {{ response }}</p>
+            <p><span class="label">English Assistant:</span> {{ response }}</p>
         </div>
         {% endif %}
     </div>
