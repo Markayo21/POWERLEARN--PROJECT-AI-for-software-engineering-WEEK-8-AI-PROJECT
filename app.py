@@ -22,6 +22,11 @@ db.init_app(app)
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
+@app.route("/")
+def index():
+    return redirect(url_for("login"))
+
+
 # Login route
 @app.route("/login", methods=["GET", "POST"])   
 #Define the login route
