@@ -1,13 +1,19 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 from nltk.corpus import wordnet
+from werkzeug.security import  check_password_hash
+from model import db, User, ChatSession
 import nltk
-from model import db
+
 
 app = Flask(__name__)
 
 # Setup database config - using SQLite here
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///english_tutor.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Secret key for session management
+app.secret_key = "your-temporary-secret-key"  # Replace later
+
 
 # Bind the database to this app
 db.init_app(app)
@@ -16,6 +22,55 @@ db.init_app(app)
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
+# Login route
+@app.route("/login", methods=["GET", "POST"])   
+#Define the login route
+def login():
+    if request.method == "POST":
+        #Get the form data
+        username  = request.form["username"]
+        password = request.form["password"]
+        
+        #Query user from database by name
+        user =User.query.filter_by(username=username).first()
+
+        # Check if user exists and password is correct
+        if user and check_password_hash(user.password, password):
+            #Login usccess and store user in session
+            session["user_id"] = user.id
+            flash("✅Login successful!", "success")
+            return redirect(url_for("home"))    
+        else:
+            flash("⛔Invalid username or password.", "danger")
+            return redirect(url_for("login"))
+        
+# logout route
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash("✅You have been logged out.", "success")
+    return redirect(url_for('login'))
+
+# home route
+@app.route('/home')
+def home():
+    if "user_id" in session:
+        return render_template("home.html", user=session["user_id"])
+    else:
+        flash("Please login first", "warning")
+        return redirect(url_for("login"))
+    
+   
+# Dashboard route
+@app.route("/dashboard")
+def dashboard():
+    if "user_id" not in session:
+        flash("⚠️ Login required.", "warning")
+        return redirect(url_for("login"))
+    return render_template("dashboard.html")
+
+
+# Function to get synonyms using WordNet
 def get_synonyms(word):
     synonyms = set()
     for syn in wordnet.synsets(word):
@@ -23,8 +78,9 @@ def get_synonyms(word):
             synonyms.add(lemma.name().replace('_', ' '))
     return list(synonyms)
 
-@app.route("/", methods=["GET", "POST"])
-def home():
+# Chatbot route
+@app.route("/chatbot", methods=["GET", "POST"]) #--- Mark i edited here to avoid dashboard route conflict
+def chatbot():
     user_input = ""
     response = ""
     if request.method == "POST":
@@ -43,26 +99,7 @@ def home():
 if __name__ == "__main__":
     app.run(debug=True)
 
-from chatbot import EnglishChatbot
-from quiz_generator import generate_quiz
-from chat_analysis import analyze_answer
 
-if __name__ == "__main__":
-    bot = EnglishChatbot()
-
-    # Chat
-    question = input("Ask something about English: ")
-    answer = bot.respond(question)
-    print("Bot:", answer)
-
-    # Quiz
-    quiz = generate_quiz("easy")
-    print("\nHere's your quiz:")
-    for item in quiz:
-        print("Q:", item["question"])
-        user_ans = input("Your answer: ")
-        result = analyze_answer(user_ans, item["answer"])
-        print(result["feedback"])
 
 
 
