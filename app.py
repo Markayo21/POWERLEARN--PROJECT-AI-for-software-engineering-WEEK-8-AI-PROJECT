@@ -1,8 +1,16 @@
 from flask import Flask, request, render_template
 from nltk.corpus import wordnet
 import nltk
+from model import db
 
 app = Flask(__name__)
+
+# Setup database config - using SQLite here
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///english_tutor.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Bind the database to this app
+db.init_app(app)
 
 # Ensure required NLTK resources are available
 nltk.download('wordnet')
