@@ -71,7 +71,8 @@ def login():
             #Login usccess and store user in session
             session["user_id"] = user.id
             flash("✅Login successful!", "success")
-            return redirect(url_for("home"))    
+            return redirect(url_for("chatbot"))  # Redirect to chatbot route
+            
         else:
             flash("⛔Invalid username or password.", "danger")
             return redirect(url_for("login"))
